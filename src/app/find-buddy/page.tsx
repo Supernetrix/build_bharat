@@ -100,7 +100,7 @@ export default function FindBuddyPage() {
     }
 
     const handleSkipBuddies = () => {
-        router.push("/")
+                router.push("/explore-journey")
     }
 
     if (!currentBuddy) {
