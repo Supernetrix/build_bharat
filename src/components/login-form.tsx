@@ -16,7 +16,7 @@ export function LoginForm() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         console.log("Login attempt:", { email, password })
-        router.push("/")
+        router.push("/character")
     }
 
     return (
