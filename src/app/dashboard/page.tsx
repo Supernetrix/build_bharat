@@ -20,6 +20,7 @@ import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
 import {useAuthStore} from "@/store/authStore"
 import type React from "react"
+import { useRouter } from "next/navigation";
 
 const BASE_URL = "https://backend-ifcu.onrender.com/api"
 
@@ -157,6 +158,7 @@ const difficultyColors = {
 const GameCard = ({game, isActive}: { game: GameCardType; isActive: boolean }) => {
     const [isGeneratingCaseStudy, setIsGeneratingCaseStudy] = useState(false)
     const {token, setCaseStudy} = useAuthStore()
+    const router = useRouter();
 
     const handlePlayClick = async () => {
         if (game.id === 1 && game.isCompleted) {
@@ -180,10 +182,10 @@ const GameCard = ({game, isActive}: { game: GameCardType; isActive: boolean }) =
                 console.log("Day 1 case study and quiz generated. User state should be at 'day1:case-study-generated'.")
 
                 setCaseStudy(data)
-                // router.push("/level/customer-detective")
+                router.push("/level/customer-detective")
             } catch (error) {
                 console.error("Error generating case study:", error)
-                // router.push("/level/customer-detective")
+                router.push("/level/customer-detective")
             } finally {
                 setIsGeneratingCaseStudy(false)
             }
@@ -267,7 +269,7 @@ const GameCard = ({game, isActive}: { game: GameCardType; isActive: boolean }) =
                                 {isGeneratingCaseStudy ? (
                                     <>
                                         <Loader2 className="w-5 h-5 animate-spin"/>
-                                        <span>Generating...</span>
+                                        <span>Loading...</span>
                                     </>
                                 ) : (
                                     <>
