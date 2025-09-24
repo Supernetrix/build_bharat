@@ -63,7 +63,7 @@ export function LoginForm() {
 
             // Set both user and token in the store
             setAuth(response.user, response.token)
-            router.push("/")
+            router.push("/dashboard")
         } catch (error) {
             setError(error instanceof Error ? error.message : "Failed to verify OTP")
         } finally {

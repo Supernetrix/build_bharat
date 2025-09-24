@@ -14,28 +14,28 @@ interface CharacterOption {
 
 const characterOptions: CharacterOption[] = [
     {
-        id: "leader",
-        name: "The Leader",
-        description: "Natural born leader with strong vision",
-        traits: ["Decisive", "Inspiring", "Strategic"],
+        id: "student-dreamer",
+        name: "The Student Dreamer",
+        description: "Quick learner with unstoppable energy",
+        traits: ["Quick learner", "Energetic", "Ambitious"],
     },
     {
-        id: "innovator",
-        name: "The Innovator",
-        description: "Creative problem solver and visionary",
-        traits: ["Creative", "Analytical", "Forward-thinking"],
+        id: "corporate-escapist",
+        name: "The Corporate Escapist",
+        description: "Resourceful mind thriving within structure",
+        traits: ["Resourceful", "Strategic", "Structured"],
     },
     {
-        id: "collaborator",
-        name: "The Collaborator",
-        description: "Team player who brings people together",
-        traits: ["Empathetic", "Diplomatic", "Supportive"],
+        id: "homemaker-innovator",
+        name: "The Homemaker Innovator",
+        description: "Creative multitasker who builds solutions",
+        traits: ["Creative", "Multitasker", "Solution-oriented"],
     },
     {
-        id: "achiever",
-        name: "The Achiever",
-        description: "Goal-oriented and results-driven",
-        traits: ["Determined", "Focused", "Ambitious"],
+        id: "serial-thinker",
+        name: "The Serial Thinker",
+        description: "Pattern spotter with endless ideas",
+        traits: ["Analytical", "Ideator", "Pattern recognition"],
     },
 ]
 
@@ -49,6 +49,7 @@ export function CharacterSelectionQuiz() {
 
     const handleSubmit = () => {
         if (selectedCharacter) {
+            localStorage.setItem("selectedArchetype", selectedCharacter)
             router.push("/onboarding")
         }
     }
@@ -92,7 +93,7 @@ export function CharacterSelectionQuiz() {
                                     className="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
                                     style={{ backgroundColor: "#F8F7F4" }}
                                 >
-                                    {index === 0 ? "👑" : index === 1 ? "💡" : index === 2 ? "🤝" : "🎯"}
+                                    {index === 0 ? "🎓" : index === 1 ? "💼" : index === 2 ? "🏠" : "🧠"}
                                 </div>
 
                                 <div>

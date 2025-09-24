@@ -4,78 +4,80 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
-
-interface QuizQuestion {
-    id: number
-    question: string
-    options: {
-        id: string
-        text: string
-    }[]
-}
-
-const psychologicalQuestions: QuizQuestion[] = [
-    {
-        id: 1,
-        question: "When facing a challenging problem, what's your first instinct?",
-        options: [
-            { id: "A", text: "Analyze all possible solutions" },
-            { id: "B", text: "Ask others for their opinions" },
-            { id: "C", text: "Trust your gut feeling" },
-            { id: "D", text: "Look for similar past experiences" },
-        ],
-    },
-    {
-        id: 2,
-        question: "In a team setting, you naturally tend to:",
-        options: [
-            { id: "A", text: "Take the leadership role" },
-            { id: "B", text: "Support and encourage others" },
-            { id: "C", text: "Focus on creative solutions" },
-            { id: "D", text: "Ensure tasks are completed" },
-        ],
-    },
-    {
-        id: 3,
-        question: "What motivates you most in your work?",
-        options: [
-            { id: "A", text: "Making a positive impact" },
-            { id: "B", text: "Financial success" },
-            { id: "C", text: "Personal growth" },
-            { id: "D", text: "Recognition from others" },
-        ],
-    },
-    {
-        id: 4,
-        question: "How do you prefer to make important decisions?",
-        options: [
-            { id: "A", text: "Based on data and facts" },
-            { id: "B", text: "Considering everyone's input" },
-            { id: "C", text: "Following your intuition" },
-            { id: "D", text: "Using proven methods" },
-        ],
-    },
-    {
-        id: 5,
-        question: "What's your approach to risk-taking?",
-        options: [
-            { id: "A", text: "Calculated risks only" },
-            { id: "B", text: "Avoid risks when possible" },
-            { id: "C", text: "Embrace bold opportunities" },
-            { id: "D", text: "Take moderate, safe risks" },
-        ],
-    },
-]
+import { useAuthStore } from "@/store/authStore"
+import { authService, type QuizQuestion } from "@/services/authService"
 
 export function PsychologicalQuiz() {
-    const [currentQuestion, setCurrentQuestion] = useState(1)
+    const [currentQuestion, setCurrentQuestion] = useState(0) // Start from 0 for array indexing
     const [selectedAnswer, setSelectedAnswer] = useState<string>("")
-    const [answers, setAnswers] = useState<Record<number, string>>({})
+    const [answers, setAnswers] = useState<Record<string, string>>({})
     const [timeRemaining, setTimeRemaining] = useState(300) // 5 minutes in seconds
+    const [questions, setQuestions] = useState<QuizQuestion[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string>("")
+    const [submitting, setSubmitting] = useState(false)
+    const [tokenChecked, setTokenChecked] = useState(false) // Track if we've checked for token
     const router = useRouter()
+    const { token } = useAuthStore()
+
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            if (!tokenChecked) {
+                setTimeout(() => setTokenChecked(true), 1000) // Give token 1 second to load
+                return
+            }
+
+            if (!token) {
+                console.log("[v0] No token available after waiting")
+                setError("Authentication required")
+                setLoading(false)
+                return
+            }
+
+            console.log("[v0] Token available, fetching questions...")
+
+            try {
+                const response = await authService.generateOnboardingQuiz(token)
+                console.log("[v0] Quiz questions response:", response)
+
+                if (!response || !response.questions || !Array.isArray(response.questions)) {
+                    console.error("[v0] Invalid response structure:", response)
+                    setError("Invalid quiz data received from server")
+                    setLoading(false)
+                    return
+                }
+
+                const validQuestions = response.questions.filter((q: any) => {
+                    const isValid = q && q.text && q.options && typeof q.options === "object"
+                    if (!isValid) {
+                        console.error("[v0] Invalid question structure:", q)
+                    }
+                    return isValid
+                })
+
+                if (validQuestions.length === 0) {
+                    setError("No valid questions received from server")
+                    setLoading(false)
+                    return
+                }
+
+                console.log("[v0] Valid questions loaded:", validQuestions.length)
+                setQuestions(validQuestions)
+                setLoading(false)
+            } catch (error) {
+                console.error("[v0] Failed to fetch quiz questions:", error)
+                setError(error instanceof Error ? error.message : "Failed to load quiz")
+                setLoading(false)
+            }
+        }
+
+        fetchQuestions()
+    }, [token, tokenChecked]) // Also depend on tokenChecked
 
     // Timer logic
     useEffect(() => {
+        if (loading) return
+
         const timer = setInterval(() => {
             setTimeRemaining((prev) => {
                 if (prev <= 1) {
@@ -87,7 +89,7 @@ export function PsychologicalQuiz() {
         }, 1000)
 
         return () => clearInterval(timer)
-    }, [])
+    }, [loading])
 
     // Format time remaining as MM:SS
     const formatTimeRemaining = (seconds: number) => {
@@ -96,28 +98,87 @@ export function PsychologicalQuiz() {
         return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
 
-    const handleAnswerSelect = (optionId: string) => {
-        setSelectedAnswer(optionId)
+    const handleAnswerSelect = (optionKey: string) => {
+        setSelectedAnswer(optionKey)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (selectedAnswer) {
-            const newAnswers = { ...answers, [currentQuestion]: selectedAnswer }
+            const questionKey = `question${currentQuestion + 1}`
+            const newAnswers = { ...answers, [questionKey]: selectedAnswer }
             setAnswers(newAnswers)
 
-            if (currentQuestion < psychologicalQuestions.length) {
+            if (currentQuestion < questions.length - 1) {
                 setCurrentQuestion(currentQuestion + 1)
                 setSelectedAnswer("")
             } else {
-                console.log("Quiz completed:", newAnswers)
-                // Handle quiz completion - could navigate to results or dashboard
-                router.push("/results")
+                await submitQuiz(newAnswers)
             }
         }
     }
 
-    const currentQuestionData = psychologicalQuestions.find((q) => q.id === currentQuestion)
-    const progress = Math.round((currentQuestion / psychologicalQuestions.length) * 100)
+    const submitQuiz = async (finalAnswers: Record<string, string>) => {
+        if (!token) {
+            console.error("No auth token available for quiz submission")
+            return
+        }
+
+        setSubmitting(true)
+        try {
+            const response = await authService.submitOnboardingQuiz(finalAnswers, token)
+            console.log("[v0] Quiz submission response:", response)
+
+            // Pass results data to results page via URL params or localStorage
+            if (response.results) {
+                localStorage.setItem("quizResults", JSON.stringify(response.results))
+            }
+
+            router.push("/results")
+        } catch (error) {
+            console.error("Failed to submit quiz:", error)
+            setError("Failed to submit quiz. Please try again.")
+        } finally {
+            setSubmitting(false)
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#F8F7F4] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F7B844] mx-auto mb-4"></div>
+                    <p className="text-[#212121]/70 font-[family-name:var(--font-space-grotesk)]">Quiz is loading...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-[#F8F7F4] flex items-center justify-center">
+                <div className="text-center max-w-md mx-auto px-4">
+                    <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                    <h2 className="text-xl font-[family-name:var(--font-unbounded)] font-medium text-[#212121] mb-2">
+                        Unable to Load Quiz
+                    </h2>
+                    <p className="text-[#212121]/70 font-[family-name:var(--font-space-grotesk)] mb-6">{error}</p>
+                    <Button
+                        onClick={() => router.push("/dashboard")}
+                        className="bg-[#F7B844] hover:bg-[#F7B844]/90 text-[#212121] font-medium rounded-2xl px-6 py-2"
+                    >
+                        Go to Dashboard
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    const currentQuestionData = questions[currentQuestion]
+    const progress = Math.round(((currentQuestion + 1) / questions.length) * 100)
+
+    console.log("[v0] Current question index:", currentQuestion)
+    console.log("[v0] Current question data:", currentQuestionData)
+    console.log("[v0] Questions array length:", questions.length)
 
     return (
         <div className="min-h-screen bg-[#F8F7F4] flex flex-col">
@@ -127,7 +188,7 @@ export function PsychologicalQuiz() {
                     <h2 className="text-sm font-medium text-[#212121]/70 font-[family-name:var(--font-space-grotesk)]">
                         Psychological Assessment
                     </h2>
-                    <div className="text-sm text-[#212121]/70 flex items-center gap-1 font-[family-name:var(--font-space-grotesk)]">
+                    <div className="text-sm text-[#212121]/60 flex items-center gap-1 font-[family-name:var(--font-space-grotesk)]">
                         <span className="font-medium text-[#212121]">{formatTimeRemaining(timeRemaining)}</span>
                         <span>remaining</span>
                     </div>
@@ -142,7 +203,7 @@ export function PsychologicalQuiz() {
 
                 <div className="flex justify-between text-xs text-[#212121]/60 font-[family-name:var(--font-space-grotesk)]">
           <span>
-            Question {currentQuestion} of {psychologicalQuestions.length}
+            Question {currentQuestion + 1} of {questions.length}
           </span>
                     <span>{progress}% complete</span>
                 </div>
@@ -151,12 +212,12 @@ export function PsychologicalQuiz() {
             {/* Main content */}
             <main className="flex-1 flex items-center justify-center px-4">
                 <div className="w-full max-w-2xl">
-                    {currentQuestionData && (
+                    {currentQuestionData && currentQuestionData.options && (
                         <div className="space-y-8">
                             {/* Question */}
                             <div className="space-y-4">
                                 <h1 className="text-3xl font-[family-name:var(--font-unbounded)] font-medium text-[#212121] leading-tight transition-all duration-300">
-                                    {currentQuestionData.question}
+                                    {currentQuestionData.text}
                                 </h1>
                                 <div className="w-full h-px bg-[#212121]/20"></div>
                             </div>
@@ -164,24 +225,22 @@ export function PsychologicalQuiz() {
                             {/* Answer Options */}
                             <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-sm overflow-hidden rounded-2xl">
                                 <div className="space-y-1">
-                                    {currentQuestionData.options.map((option) => (
+                                    {Object.entries(currentQuestionData.options).map(([key, text]) => (
                                         <button
-                                            key={option.id}
-                                            onClick={() => handleAnswerSelect(option.id)}
+                                            key={key}
+                                            onClick={() => handleAnswerSelect(key)}
                                             className={`w-full flex items-center px-6 py-4.5 text-left transition-all duration-200 font-[family-name:var(--font-space-grotesk)] ${
-                                                selectedAnswer === option.id
-                                                    ? "bg-[#25D366]/10 border-l-4 border-[#25D366]"
-                                                    : "hover:bg-[#F8F7F4]/50"
+                                                selectedAnswer === key ? "bg-[#25D366]/10 border-l-4 border-[#25D366]" : "hover:bg-[#F8F7F4]/50"
                                             }`}
                                         >
                                             <div
                                                 className={`w-6 h-6 rounded-full flex items-center justify-center font-medium text-sm mr-4 flex-shrink-0 transition-all duration-200 ${
-                                                    selectedAnswer === option.id ? "bg-[#25D366] text-white" : "bg-[#212121]/20 text-[#212121]/70"
+                                                    selectedAnswer === key ? "bg-[#25D366] text-white" : "bg-[#212121]/20 text-[#212121]/70"
                                                 }`}
                                             >
-                                                {option.id}
+                                                {key}
                                             </div>
-                                            <span className="text-[#212121]">{option.text}</span>
+                                            <span className="text-[#212121]">{text}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -191,12 +250,24 @@ export function PsychologicalQuiz() {
                             <div className="pt-4">
                                 <Button
                                     onClick={handleSubmit}
-                                    disabled={!selectedAnswer}
+                                    disabled={!selectedAnswer || submitting}
                                     className="w-full h-12 bg-[#F7B844] hover:bg-[#F7B844]/90 text-[#212121] font-medium rounded-2xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-[family-name:var(--font-space-grotesk)]"
                                 >
-                                    {currentQuestion === psychologicalQuestions.length ? "Complete Assessment" : "Continue"}
+                                    {submitting
+                                        ? "Submitting..."
+                                        : currentQuestion === questions.length - 1
+                                            ? "Complete Assessment"
+                                            : "Continue"}
                                 </Button>
                             </div>
+                        </div>
+                    )}
+
+                    {!currentQuestionData && !loading && (
+                        <div className="text-center">
+                            <p className="text-[#212121]/70 font-[family-name:var(--font-space-grotesk)]">
+                                Question data is not available. Please refresh the page.
+                            </p>
                         </div>
                     )}
                 </div>

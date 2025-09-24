@@ -11,6 +11,24 @@ export interface VerifyOTPRequest {
     fullName: string
 }
 
+export interface SignupRequest {
+    username: string
+    full_name: string
+    phone_number: string
+    password: string
+}
+
+export interface OnboardingProfileRequest {
+    archetype: string
+    businessIdea: string
+}
+
+export interface OnboardingProfileResponse {
+    success: boolean
+    message: string
+    user?: User
+}
+
 export interface User {
     id: string
     phone_number: string
@@ -36,6 +54,29 @@ export interface AuthResponse {
 export interface SendOTPResponse {
     success: boolean
     message: string
+}
+
+export interface QuizQuestion {
+    id: number
+    question: string
+    options: {
+        id: string
+        text: string
+    }[]
+}
+
+export interface QuizGenerateResponse {
+    questions: QuizQuestion[]
+}
+
+export interface QuizSubmitRequest {
+    answers: Record<string, string>
+}
+
+export interface QuizSubmitResponse {
+    success: boolean
+    message: string
+    results?: any
 }
 
 export const authService = {
@@ -111,7 +152,7 @@ export const authService = {
         }
     },
 
-    async signup(phoneNumber: string, otp: string, username: string, fullName: string): Promise<AuthResponse> {
+    async signup(username: string, fullName: string, phoneNumber: string, password: string): Promise<AuthResponse> {
         try {
             const response = await fetch(`${BASE_URL}/users/signup`, {
                 method: "POST",
@@ -119,10 +160,10 @@ export const authService = {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    phoneNumber,
-                    otp,
                     username,
-                    fullName,
+                    full_name: fullName,
+                    phone_number: phoneNumber,
+                    password,
                 }),
             })
 
@@ -136,6 +177,81 @@ export const authService = {
                 user: data.user,
                 token: data.token,
             }
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : "Network error")
+        }
+    },
+
+    async completeOnboardingProfile(
+        archetype: string,
+        businessIdea: string,
+        token: string,
+    ): Promise<OnboardingProfileResponse> {
+        try {
+            const response = await fetch(`${BASE_URL}/users/onboarding/profile`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    archetype,
+                    businessIdea,
+                }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to complete onboarding profile")
+            }
+
+            return data
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : "Network error")
+        }
+    },
+
+    async generateOnboardingQuiz(token: string): Promise<QuizGenerateResponse> {
+        try {
+            const response = await fetch(`${BASE_URL}/quiz/onboarding/generate`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to generate quiz")
+            }
+
+            return data
+        } catch (error) {
+            throw new Error(error instanceof Error ? error.message : "Network error")
+        }
+    },
+
+    async submitOnboardingQuiz(answers: Record<string, string>, token: string): Promise<QuizSubmitResponse> {
+        try {
+            const response = await fetch(`${BASE_URL}/quiz/onboarding/submit`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ answers }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to submit quiz")
+            }
+
+            return data
         } catch (error) {
             throw new Error(error instanceof Error ? error.message : "Network error")
         }

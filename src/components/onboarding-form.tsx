@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
+import { useAuthStore } from "@/store/authStore"
+import { authService } from "@/services/authService"
 
 interface OnboardingStep {
     id: number
@@ -38,18 +40,54 @@ const onboardingSteps: OnboardingStep[] = [
 export function OnboardingForm() {
     const [currentStep, setCurrentStep] = useState(1)
     const [answers, setAnswers] = useState<Record<number, string>>({})
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [selectedArchetype, setSelectedArchetype] = useState<string>("")
     const router = useRouter()
+    const { user, token } = useAuthStore()
+
+    useEffect(() => {
+        const archetype = localStorage.getItem("selectedArchetype")
+        if (archetype) {
+            setSelectedArchetype(archetype)
+        }
+    }, [])
 
     const handleAnswerChange = (stepId: number, value: string) => {
         setAnswers((prev) => ({ ...prev, [stepId]: value }))
     }
 
-    const handleProceed = () => {
+    const handleProceed = async () => {
         if (currentStep < onboardingSteps.length) {
             setCurrentStep(currentStep + 1)
         } else {
-            console.log("Onboarding completed:", answers)
-            router.push("/quiz")
+            await completeOnboarding()
+        }
+    }
+
+    const completeOnboarding = async () => {
+        if (!token || !selectedArchetype || !answers[1]) {
+            console.error("Missing required data for onboarding completion")
+            return
+        }
+
+        setIsSubmitting(true)
+        try {
+            await authService.completeOnboardingProfile(
+                selectedArchetype,
+                answers[1], // Business idea from step 1
+                token,
+            )
+
+            // Clear the stored archetype
+            localStorage.removeItem("selectedArchetype")
+
+            console.log("Onboarding completed successfully")
+            router.push("/dashboard")
+        } catch (error) {
+            console.error("Failed to complete onboarding:", error)
+            // Handle error - maybe show a toast or error message
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -114,10 +152,10 @@ export function OnboardingForm() {
                                 <div className="mt-6">
                                     <Button
                                         onClick={handleProceed}
-                                        disabled={!answers[currentStep]?.trim()}
+                                        disabled={!answers[currentStep]?.trim() || isSubmitting}
                                         className="w-full h-14 bg-[#F7B844] hover:bg-[#F7B844]/90 text-[#212121] text-lg font-bold rounded-2xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-[family-name:var(--font-space-grotesk)]"
                                     >
-                                        {currentStep === onboardingSteps.length ? "Complete" : "Proceed"}
+                                        {isSubmitting ? "Completing..." : currentStep === onboardingSteps.length ? "Complete" : "Proceed"}
                                     </Button>
                                 </div>
                             </Card>

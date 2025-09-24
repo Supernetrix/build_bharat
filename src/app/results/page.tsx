@@ -34,7 +34,7 @@ export default function ResultsPage() {
     ]
 
     const handleContinue = () => {
-        router.push("/explore")
+        router.push("/community")
     }
 
     const handleFindBuddy = () => {
