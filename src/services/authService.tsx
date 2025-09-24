@@ -57,12 +57,16 @@ export interface SendOTPResponse {
 }
 
 export interface QuizQuestion {
-    id: number
-    question: string
+    type: string
+    trait: string
+    text: string
     options: {
-        id: string
-        text: string
-    }[]
+        A: string
+        B: string
+        C: string
+        D: string
+    }
+    answer: string
 }
 
 export interface QuizGenerateResponse {
@@ -87,7 +91,7 @@ export const authService = {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ phoneNumber }),
+                body: JSON.stringify({phoneNumber}),
             })
 
             const data = await response.json()
@@ -134,7 +138,7 @@ export const authService = {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ phoneNumber, otp }),
+                body: JSON.stringify({phoneNumber, otp}),
             })
 
             const data = await response.json()
@@ -242,7 +246,7 @@ export const authService = {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ answers }),
+                body: JSON.stringify({answers}),
             })
 
             const data = await response.json()

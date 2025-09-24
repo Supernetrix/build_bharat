@@ -48,7 +48,7 @@ export function PsychologicalQuiz() {
                 }
 
                 const validQuestions = response.questions.filter((q: QuizQuestion) => {
-                    const isValid = q && q.question && q.options && typeof q.options === "object"
+                    const isValid = q && q.text && q.options && typeof q.options === "object"
                     if (!isValid) {
                         console.error("[v0] Invalid question structure:", q)
                     }
@@ -217,7 +217,7 @@ export function PsychologicalQuiz() {
                             {/* Question */}
                             <div className="space-y-4">
                                 <h1 className="text-3xl font-[family-name:var(--font-unbounded)] font-medium text-[#212121] leading-tight transition-all duration-300">
-                                    {currentQuestionData.question}
+                                    {currentQuestionData.text}
                                 </h1>
                                 <div className="w-full h-px bg-[#212121]/20"></div>
                             </div>
@@ -240,7 +240,7 @@ export function PsychologicalQuiz() {
                                             >
                                                 {key}
                                             </div>
-                                            <span className="text-[#212121]">{typeof option === "string" ? option : option.text}</span>
+                                            <span className="text-[#212121]">{option}</span>
                                         </button>
                                     ))}
                                 </div>
