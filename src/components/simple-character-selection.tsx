@@ -2,13 +2,13 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useMobile } from '@/hooks/use-mobile'; // Using existing mobile detection hook
+// import { useMobile } from '@/hooks/use-mobile'; // Using existing mobile detection hook
 
 export function SimpleCharacterSelection() {
   const [showContent, setShowContent] = useState(false);
   const [buttonHovered, setButtonHovered] = useState(false);
   const router = useRouter();
-  const isMobile = useMobile();
+  // const isMobile = useMobile();
 
   useEffect(() => {
     // Add smooth animation when component mounts
@@ -28,14 +28,14 @@ export function SimpleCharacterSelection() {
     return () => clearTimeout(timer);
   };
 
-  // Responsive sizes
-  const getBackgroundCircleSize = () => {
-    return isMobile ? 'w-20 h-20' : 'w-32 h-32';
-  };
-
-  const getEmojiSize = () => {
-    return isMobile ? 'text-3xl' : 'text-4xl';
-  };
+  // // Responsive sizes
+  // const getBackgroundCircleSize = () => {
+  //   return isMobile ? 'w-20 h-20' : 'w-32 h-32';
+  // };
+  //
+  // const getEmojiSize = () => {
+  //   return isMobile ? 'text-3xl' : 'text-4xl';
+  // };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
@@ -53,7 +53,7 @@ export function SimpleCharacterSelection() {
       {/* Main content with animation */}
       <div 
         className={`transition-all duration-1000 ease-out ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-        style={{ maxWidth: isMobile ? '90vw' : '400px', width: '100%' }}
+        // style={{ maxWidth: isMobile ? '90vw' : '400px', width: '100%' }}
       >
         {/* Character selection card */}
         <div className="bg-card rounded-2xl p-6 sm:p-8 shadow-lg border border-border transition-all duration-500 hover:shadow-xl">
@@ -82,9 +82,9 @@ export function SimpleCharacterSelection() {
 
         {/* Subtle character icon with responsive sizing */}
         <div className="mt-6 sm:mt-8 flex justify-center">
-          <div className={`${getBackgroundCircleSize()} bg-gradient-to-br from-[#FFDA57] to-[#FFD000] rounded-full flex items-center justify-center ${getEmojiSize()} animate-bounce`}>
-            🤖
-          </div>
+          {/*<div className={`${getBackgroundCircleSize()} bg-gradient-to-br from-[#FFDA57] to-[#FFD000] rounded-full flex items-center justify-center ${getEmojiSize()} animate-bounce`}>*/}
+          {/*  🤖*/}
+          {/*</div>*/}
         </div>
       </div>
     </div>

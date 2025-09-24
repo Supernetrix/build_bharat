@@ -1,11 +1,12 @@
 "use client"
 
 import Avatar from "react-nice-avatar"
+import type { ReactNode } from "react" // Add this import
 import {useAuthStore} from "@/store/authStore"
 
 interface HeaderProps {
     showExpProgress?: boolean
-    title?: string
+    title?: ReactNode
     subtitle?: string
 }
 

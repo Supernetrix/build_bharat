@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ArrowLeft, Trophy, Clock, Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useAuthStore } from "@/store/authStore"
+import {useState, useEffect} from "react"
+import {ArrowLeft, Trophy, Clock, Loader2} from "lucide-react"
+import {useRouter} from "next/navigation"
+import {useAuthStore} from "@/store/authStore"
 
 interface CaseStudyData {
     title: string
@@ -131,10 +131,10 @@ export default function CustomerDetectiveLevel() {
     }
 
     // Progress bar component
-    const ProgressBar = ({ current, total }: { current: number; total: number }) => (
+    const ProgressBar = ({current, total}: { current: number; total: number }) => (
         <div className="flex gap-1 mb-8">
-            {Array.from({ length: total }, (_, i) => (
-                <div key={i} className={`flex-1 h-2 rounded-full ${i < current ? "bg-gray-800" : "bg-gray-300"}`} />
+            {Array.from({length: total}, (_, i) => (
+                <div key={i} className={`flex-1 h-2 rounded-full ${i < current ? "bg-gray-800" : "bg-gray-300"}`}/>
             ))}
         </div>
     )
@@ -157,7 +157,7 @@ export default function CustomerDetectiveLevel() {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ answers }),
+                body: JSON.stringify({answers}),
             })
 
             const quizResult = await quizResponse.json()
@@ -262,10 +262,10 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
@@ -338,15 +338,15 @@ export default function CustomerDetectiveLevel() {
                             onClick={handleBackToDashboard}
                             className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                         >
-                            <ArrowLeft className="w-5 h-5 text-gray-600" />
+                            <ArrowLeft className="w-5 h-5 text-gray-600"/>
                         </button>
                         <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-gray-600" />
+                            <Clock className="w-4 h-4 text-gray-600"/>
                             <span className="text-sm text-gray-600 font-medium">04:50</span>
                         </div>
                     </div>
 
-                    <ProgressBar current={currentQuizQuestion + 1} total={caseStudy.strategic_quiz.length} />
+                    <ProgressBar current={currentQuizQuestion + 1} total={caseStudy.strategic_quiz.length}/>
 
                     <div className="space-y-6">
                         <div className="text-center">
@@ -355,7 +355,7 @@ export default function CustomerDetectiveLevel() {
 
                         <div className="bg-white rounded-3xl p-6 border border-[#E0E0E0]">
                             <p className="text-gray-700 leading-relaxed">
-                                Thank you for your response. Let's continue with the next question.
+                                Thank you for your response. {"Let's"} continue with the next question.
                             </p>
                         </div>
 
@@ -385,15 +385,15 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
 
-                <ProgressBar current={currentQuizQuestion + 1} total={caseStudy.strategic_quiz.length} />
+                <ProgressBar current={currentQuizQuestion + 1} total={caseStudy.strategic_quiz.length}/>
 
                 <div className="space-y-6">
                     <div className="text-center">
@@ -426,7 +426,7 @@ export default function CustomerDetectiveLevel() {
                     >
                         {isSubmittingQuiz ? (
                             <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <Loader2 className="w-5 h-5 animate-spin"/>
                                 Submitting...
                             </>
                         ) : (
@@ -448,17 +448,18 @@ export default function CustomerDetectiveLevel() {
                             onClick={handleBackToDashboard}
                             className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                         >
-                            <ArrowLeft className="w-5 h-5 text-gray-600" />
+                            <ArrowLeft className="w-5 h-5 text-gray-600"/>
                         </button>
                         <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-gray-600" />
+                            <Clock className="w-4 h-4 text-gray-600"/>
                             <span className="text-sm text-gray-600 font-medium">04:50</span>
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <div className="text-center">
-                            <h1 className="text-2xl font-bold text-[#111111] mb-4 leading-tight">Loading Psychology Course...</h1>
+                            <h1 className="text-2xl font-bold text-[#111111] mb-4 leading-tight">Loading Psychology
+                                Course...</h1>
                         </div>
 
                         <div className="bg-white rounded-3xl p-6 border border-[#E0E0E0]">
@@ -481,15 +482,15 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
 
-                <ProgressBar current={3} total={6} />
+                <ProgressBar current={3} total={6}/>
 
                 <div className="space-y-6">
                     {/* Course Header */}
@@ -526,7 +527,8 @@ export default function CustomerDetectiveLevel() {
                                 <div className="space-y-2">
                                     {currentLesson.actionable_steps.map((step, index) => (
                                         <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                                            <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                            <div
+                                                className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                                                 <span className="text-xs font-bold text-gray-700">{index + 1}</span>
                                             </div>
                                             <span className="text-gray-700 text-sm leading-relaxed">{step}</span>
@@ -599,27 +601,29 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
 
-                <ProgressBar current={4} total={6} />
+                <ProgressBar current={4} total={6}/>
 
                 <div className="space-y-6">
                     <div className="text-center">
                         <h1 className="text-2xl font-bold text-[#111111] mb-6 leading-tight">
-                            You're ready for the field. Conduct your interview with the matched customer. Take notes, and return here
-                            when you're ready to summarize your findings.
+                            {
+                                "You're ready for the field. Conduct your interview with the matched customer. Take notes, and return here when you're ready to summarize your findings."
+                            }
                         </h1>
                     </div>
 
                     <div className="bg-white rounded-3xl p-6 border border-[#E0E0E0]">
                         <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <div
+                                className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <span className="text-2xl">🎯</span>
                             </div>
                             <h2 className="text-xl font-bold text-gray-800 mb-2">Field Mission</h2>
@@ -629,11 +633,13 @@ export default function CustomerDetectiveLevel() {
                         <div className="space-y-4">
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                                 <div className="w-6 h-6 border-2 border-gray-400 rounded"></div>
-                                <span className="text-gray-700 font-medium">Find someone who drinks coffee regularly</span>
+                                <span
+                                    className="text-gray-700 font-medium">Find someone who drinks coffee regularly</span>
                             </div>
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                                 <div className="w-6 h-6 border-2 border-gray-400 rounded"></div>
-                                <span className="text-gray-700 font-medium">Ask about their coffee shop preferences</span>
+                                <span
+                                    className="text-gray-700 font-medium">Ask about their coffee shop preferences</span>
                             </div>
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                                 <div className="w-6 h-6 border-2 border-gray-400 rounded"></div>
@@ -646,7 +652,7 @@ export default function CustomerDetectiveLevel() {
                         onClick={() => setCurrentStage(5)}
                         className="w-full bg-[#212121] text-white rounded-full py-4 font-bold"
                     >
-                        I've Completed the Interview
+                        {"I've"} Completed the Interview
                     </button>
                 </div>
             </div>
@@ -662,21 +668,22 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
 
-                <ProgressBar current={5} total={6} />
+                <ProgressBar current={5} total={6}/>
 
                 <div className="space-y-6">
                     <div className="text-center">
                         <h1 className="text-2xl font-bold text-[#111111] mb-4 leading-tight">
-                            Welcome back, Detective. Based on your conversation, what was the customer's single biggest pain point?
-                            Describe it in one sentence.
+                            {
+                                "Welcome back, Detective. Based on your conversation, what was the customer's single biggest pain point? Describe it in one sentence."
+                            }
                         </h1>
                     </div>
 
@@ -684,7 +691,7 @@ export default function CustomerDetectiveLevel() {
             <textarea
                 value={currentTextAnswer}
                 onChange={(e) => setCurrentTextAnswer(e.target.value)}
-                placeholder="Write down your unswear here..."
+                placeholder="Write down your answer here..."
                 className="w-full bg-transparent text-black placeholder-gray-700 resize-none focus:outline-none text-lg font-medium"
                 rows={4}
             />
@@ -718,24 +725,25 @@ export default function CustomerDetectiveLevel() {
                             onClick={handleBackToDashboard}
                             className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                         >
-                            <ArrowLeft className="w-5 h-5 text-gray-600" />
+                            <ArrowLeft className="w-5 h-5 text-gray-600"/>
                         </button>
                         <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-gray-600" />
+                            <Clock className="w-4 h-4 text-gray-600"/>
                             <span className="text-sm text-gray-600 font-medium">04:50</span>
                         </div>
                     </div>
 
-                    <ProgressBar current={6} total={6} />
+                    <ProgressBar current={6} total={6}/>
 
                     <div className="space-y-6">
                         <div className="text-center">
-                            <h1 className="text-2xl font-bold text-[#111111] mb-4 leading-tight">Generating Your Results...</h1>
+                            <h1 className="text-2xl font-bold text-[#111111] mb-4 leading-tight">Generating Your
+                                Results...</h1>
                         </div>
 
                         <div className="bg-white rounded-3xl p-6 border border-[#E0E0E0]">
                             <div className="flex items-center justify-center">
-                                <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+                                <Loader2 className="w-8 h-8 animate-spin text-gray-600"/>
                             </div>
                             <p className="text-gray-700 leading-relaxed text-center mt-4">
                                 Please wait while we calculate your performance and generate your personalized summary.
@@ -756,15 +764,15 @@ export default function CustomerDetectiveLevel() {
                         onClick={handleBackToDashboard}
                         className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-[#E0E0E0]"
                     >
-                        <ArrowLeft className="w-5 h-5 text-gray-600" />
+                        <ArrowLeft className="w-5 h-5 text-gray-600"/>
                     </button>
                     <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gray-600" />
+                        <Clock className="w-4 h-4 text-gray-600"/>
                         <span className="text-sm text-gray-600 font-medium">04:50</span>
                     </div>
                 </div>
 
-                <ProgressBar current={6} total={6} />
+                <ProgressBar current={6} total={6}/>
 
                 <div className="space-y-6">
                     <div className="text-center">
@@ -773,8 +781,9 @@ export default function CustomerDetectiveLevel() {
 
                     <div className="bg-gradient-to-br from-orange-400 to-yellow-500 rounded-3xl p-6 text-white">
                         <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <Trophy className="w-8 h-8 text-white" />
+                            <div
+                                className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Trophy className="w-8 h-8 text-white"/>
                             </div>
                             <div className="text-4xl font-bold mb-2">{randomScore}/100</div>
                             <div className="text-lg font-medium">Overall Score</div>
@@ -785,8 +794,9 @@ export default function CustomerDetectiveLevel() {
                                 <span className="font-medium">XP Gained</span>
                                 <span className="font-bold">+{randomXP} XP</span>
                             </div>
-                            <div className="bg-white/20 rounded-full h-3">
-                                <div className="bg-white rounded-full h-3" style={{ width: `${Math.min(randomScore, 100)}%` }}></div>
+                            <div className="bg-white rounded-full h-3">
+                                <div className="bg-white rounded-full h-3"
+                                     style={{width: `${Math.min(randomScore, 100)}%`}}></div>
                             </div>
                         </div>
 
@@ -817,7 +827,7 @@ export default function CustomerDetectiveLevel() {
                         </div>
 
                         <div className="mt-4 space-y-3">
-                            <h3 className="font-bold text-lg">Tomorrow's Plan:</h3>
+                            <h3 className="font-bold text-lg">{"Tomorrow's"} Plan:</h3>
                             <div className="space-y-2">
                                 {endOfDaySummary.suggested_plan_for_tomorrow.map((plan, index) => (
                                     <div key={index} className="bg-white/20 rounded-xl p-3">

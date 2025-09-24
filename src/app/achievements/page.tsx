@@ -1,7 +1,7 @@
 "use client"
 
-import { ArrowLeft, Lock, Sparkles } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Lock, Sparkles } from "lucide-react"
+// import { useRouter } from "next/navigation"
 import { useState } from "react"
 import BottomNavigation from "@/components/BottomNavigation"
 import Header from "@/components/Header"
@@ -79,7 +79,7 @@ const achievements: Achievement[] = [
 ]
 
 export default function AchievementsPage() {
-    const router = useRouter()
+    // const router = useRouter()
     const [activeTab, setActiveTab] = useState<"unlocked" | "locked">("unlocked")
 
     const unlockedAchievements = achievements.filter((a) => a.isUnlocked)

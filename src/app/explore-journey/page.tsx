@@ -1,14 +1,12 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import Header from "@/components/Header"
 
 export default function ExploreJourneyPage() {
     const router = useRouter()
 
     return (
         <div className="min-h-screen bg-[#F8F7F4] relative overflow-hidden font-[family-name:var(--font-space-grotesk)]">
-
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-10 w-32 h-32 bg-[#F7B844]/10 rounded-full animate-pulse"></div>
                 <div className="absolute top-40 right-8 w-24 h-24 bg-[#F95C8A]/10 rounded-full animate-pulse delay-1000"></div>
@@ -55,7 +53,9 @@ export default function ExploreJourneyPage() {
                     </button>
                 </div>
 
-                <div className="mt-8 text-[#212121]/60 text-sm">✨ You're now part of a community of creative innovators!</div>
+                <div className="mt-8 text-[#212121]/60 text-sm">
+                    ✨ {"You're"} now part of a community of creative innovators!
+                </div>
             </div>
         </div>
     )

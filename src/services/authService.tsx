@@ -35,13 +35,13 @@ export interface User {
     username: string
     full_name: string
     city: string | null
-    profile: Record<string, any>
+    profile: Record<string, unknown>
     password: string | null
-    psych_profile: any | null
+    psych_profile: Record<string, unknown> | null
     currentDay: number
     currentStepId: string
     xp: number
-    progress: Record<string, any>
+    progress: Record<string, unknown>
     createdAt: string
     updatedAt: string
 }
@@ -76,7 +76,7 @@ export interface QuizSubmitRequest {
 export interface QuizSubmitResponse {
     success: boolean
     message: string
-    results?: any
+    results?: Record<string, unknown>
 }
 
 export const authService = {

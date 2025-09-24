@@ -14,19 +14,36 @@ import {
     Star,
     Loader2,
 } from "lucide-react"
-import { useState, useEffect } from "react"
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel"
-import { useRouter } from "next/navigation"
+import {useState, useEffect} from "react"
+import {Carousel, CarouselContent, CarouselItem, type CarouselApi} from "@/components/ui/carousel"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
-import { useAuthStore } from "@/store/authStore"
+import {useAuthStore} from "@/store/authStore"
+import type React from "react"
 
 const BASE_URL = "https://backend-ifcu.onrender.com/api"
 
-const gameCards = [
+interface GameCardType {
+    id: number
+    title: string
+    online: string
+    bgTop: string
+    bgBottom: string
+    character: string
+    level: number
+    isUnlocked: boolean
+    isCompleted: boolean
+    progress: number
+    stars: number
+    difficulty: string
+    reward: string
+}
+
+const gameCards: GameCardType[] = [
     {
         id: 1,
-        title: "THE CREATOR",
+        title: "Tebak Gambar",
+        online: "8,472",
         bgTop: "#F7B844",
         bgBottom: "#F95C8A",
         character: "pink",
@@ -40,7 +57,8 @@ const gameCards = [
     },
     {
         id: 2,
-        title: "THE CONNECTOR",
+        title: "Word Quest",
+        online: "5,231",
         bgTop: "#4ECDC4",
         bgBottom: "#44A08D",
         character: "blue",
@@ -54,7 +72,8 @@ const gameCards = [
     },
     {
         id: 3,
-        title: "THE MARKETER",
+        title: "Math Hero",
+        online: "3,847",
         bgTop: "#A8E6CF",
         bgBottom: "#7FCDCD",
         character: "green",
@@ -69,6 +88,7 @@ const gameCards = [
     {
         id: 4,
         title: "Color Match",
+        online: "6,592",
         bgTop: "#FFB6C1",
         bgBottom: "#FFA07A",
         character: "coral",
@@ -82,7 +102,8 @@ const gameCards = [
     },
     {
         id: 5,
-        title: "THE LAUNCHER",
+        title: "Brain Teaser",
+        online: "4,156",
         bgTop: "#DDA0DD",
         bgBottom: "#9370DB",
         character: "purple",
@@ -96,7 +117,8 @@ const gameCards = [
     },
     {
         id: 6,
-        title: "THE ANALYST",
+        title: "Speed Quiz",
+        online: "7,823",
         bgTop: "#F0E68C",
         bgBottom: "#DAA520",
         character: "yellow",
@@ -111,6 +133,7 @@ const gameCards = [
     {
         id: 7,
         title: "Memory Game",
+        online: "2,945",
         bgTop: "#87CEEB",
         bgBottom: "#4682B4",
         character: "sky",
@@ -124,16 +147,6 @@ const gameCards = [
     },
 ]
 
-const characterColors = {
-    pink: "#F95C8A",
-    blue: "#4ECDC4",
-    green: "#A8E6CF",
-    coral: "#FFA07A",
-    purple: "#DDA0DD",
-    yellow: "#F0E68C",
-    sky: "#87CEEB",
-}
-
 const difficultyColors = {
     Easy: "#4ADE80",
     Medium: "#F59E0B",
@@ -141,10 +154,9 @@ const difficultyColors = {
     Expert: "#8B5CF6",
 }
 
-const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
+const GameCard = ({game, isActive}: { game: GameCardType; isActive: boolean }) => {
     const [isGeneratingCaseStudy, setIsGeneratingCaseStudy] = useState(false)
-    const { token, setCaseStudy } = useAuthStore()
-    const router = useRouter()
+    const {token, setCaseStudy} = useAuthStore()
 
     const handlePlayClick = async () => {
         if (game.id === 1 && game.isCompleted) {
@@ -168,10 +180,10 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
                 console.log("Day 1 case study and quiz generated. User state should be at 'day1:case-study-generated'.")
 
                 setCaseStudy(data)
-                router.push("/level/customer-detective")
+                // router.push("/level/customer-detective")
             } catch (error) {
                 console.error("Error generating case study:", error)
-                router.push("/level/customer-detective")
+                // router.push("/level/customer-detective")
             } finally {
                 setIsGeneratingCaseStudy(false)
             }
@@ -183,7 +195,7 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
             {game.isCompleted && (
                 <div className="absolute -top-2 -right-2 z-20">
                     <div className="relative">
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping" />
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping"/>
                     </div>
                 </div>
             )}
@@ -203,7 +215,7 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
                 {!game.isUnlocked && (
                     <div className="absolute inset-0 z-30 bg-black/40 rounded-3xl flex items-center justify-center">
                         <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-lg">
-                            <Lock className="w-8 h-8 text-gray-600" />
+                            <Lock className="w-8 h-8 text-gray-600"/>
                         </div>
                     </div>
                 )}
@@ -211,15 +223,15 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
                 <div className="absolute inset-0 opacity-20">
                     <div
                         className="absolute top-4 left-4 w-6 h-6 bg-white/30 rounded-full animate-bounce"
-                        style={{ animationDelay: "0s" }}
+                        style={{animationDelay: "0s"}}
                     />
                     <div
                         className="absolute top-8 right-6 w-4 h-4 bg-white/20 rounded-full animate-bounce"
-                        style={{ animationDelay: "0.5s" }}
+                        style={{animationDelay: "0.5s"}}
                     />
                     <div
                         className="absolute bottom-12 left-8 w-3 h-3 bg-white/25 rounded-full animate-bounce"
-                        style={{ animationDelay: "1s" }}
+                        style={{animationDelay: "1s"}}
                     />
                 </div>
 
@@ -231,7 +243,7 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
               </span>
                             <div
                                 className="px-2 py-0.5 rounded-full text-xs font-bold text-white"
-                                style={{ backgroundColor: difficultyColors[game.difficulty as keyof typeof difficultyColors] }}
+                                style={{backgroundColor: difficultyColors[game.difficulty as keyof typeof difficultyColors]}}
                             >
                                 {game.difficulty}
                             </div>
@@ -254,19 +266,19 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
                             <>
                                 {isGeneratingCaseStudy ? (
                                     <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        <span>Loading...</span>
+                                        <Loader2 className="w-5 h-5 animate-spin"/>
+                                        <span>Generating...</span>
                                     </>
                                 ) : (
                                     <>
-                                        <Play className="w-5 h-5 fill-current" />
+                                        <Play className="w-5 h-5 fill-current"/>
                                         <span>{game.isCompleted ? "Continue" : "Play"}</span>
                                     </>
                                 )}
                             </>
                         ) : (
                             <>
-                                <Lock className="w-5 h-5" />
+                                <Lock className="w-5 h-5"/>
                                 <span>Complete Level {game.level - 1}</span>
                             </>
                         )}
@@ -329,12 +341,14 @@ const PomodoroTimer = () => {
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-sm mb-6">
             <div className="text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
-                    <Timer className="w-5 h-5 text-[#F7B844]" />
-                    <h3 className="text-lg font-bold text-[#111111] font-[family-name:var(--font-unbounded)]">Pomodoro Timer</h3>
+                    <Timer className="w-5 h-5 text-[#F7B844]"/>
+                    <h3 className="text-lg font-bold text-[#111111] font-[family-name:var(--font-unbounded)]">Pomodoro
+                        Timer</h3>
                 </div>
 
                 <div className="mb-4">
-                    <div className="text-4xl font-bold text-[#111111] font-[family-name:var(--font-space-grotesk)] mb-2">
+                    <div
+                        className="text-4xl font-bold text-[#111111] font-[family-name:var(--font-space-grotesk)] mb-2">
                         {formatTime(timeLeft)}
                     </div>
                     <div className="text-sm font-medium text-gray-600">{isBreak ? "Break Time" : "Focus Time"}</div>
@@ -345,21 +359,21 @@ const PomodoroTimer = () => {
                         onClick={() => setIsActive(!isActive)}
                         className="bg-[#F7B844] hover:bg-[#F7B844]/90 text-white rounded-full p-3 shadow-lg transition-all duration-200"
                     >
-                        {isActive ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 fill-current" />}
+                        {isActive ? <Pause className="w-5 h-5"/> : <Play className="w-5 h-5 fill-current"/>}
                     </button>
 
                     <button
                         onClick={resetTimer}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-200"
                     >
-                        <RotateCcw className="w-5 h-5" />
+                        <RotateCcw className="w-5 h-5"/>
                     </button>
 
                     <button
                         onClick={skipSession}
                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-3 shadow-lg transition-all duration-200"
                     >
-                        <SkipForward className="w-5 h-5" />
+                        <SkipForward className="w-5 h-5"/>
                     </button>
                 </div>
             </div>
@@ -383,7 +397,19 @@ const DailyQuests = () => {
         })
     }, [questApi])
 
-    const dailyQuests = [
+    interface QuestType {
+        id: number
+        title: string
+        description: string
+        progress: number
+        target: number
+        reward: string
+        icon: React.ComponentType<{ className?: string }>
+        bgColor: string
+        isCompleted: boolean
+    }
+
+    const dailyQuests: QuestType[] = [
         {
             id: 1,
             title: "Win 3 Games",
@@ -457,19 +483,21 @@ const DailyQuests = () => {
 
                             return (
                                 <CarouselItem key={quest.id} className="pl-2 md:pl-4 basis-1/2">
-                                    <button className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-left w-full h-full">
+                                    <button
+                                        className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] text-left w-full h-full">
                                         <div className="flex flex-col h-full">
                                             <div className="flex items-center justify-between mb-3">
                                                 <div
                                                     className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md"
-                                                    style={{ backgroundColor: quest.bgColor }}
+                                                    style={{backgroundColor: quest.bgColor}}
                                                 >
-                                                    <IconComponent className="w-5 h-5 text-white" />
+                                                    <IconComponent className="w-5 h-5 text-white"/>
                                                 </div>
 
                                                 {quest.isCompleted && (
-                                                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                                                        <Star className="w-3 h-3 text-white fill-current" />
+                                                    <div
+                                                        className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                                                        <Star className="w-3 h-3 text-white fill-current"/>
                                                     </div>
                                                 )}
                                             </div>
@@ -496,7 +524,7 @@ const DailyQuests = () => {
                           <span className="text-xs text-gray-500 font-medium">
                             {quest.progress}/{quest.target}
                           </span>
-                                                    <span className="text-xs font-bold" style={{ color: quest.bgColor }}>
+                                                    <span className="text-xs font-bold" style={{color: quest.bgColor}}>
                             {quest.reward}
                           </span>
                                                 </div>
@@ -511,7 +539,7 @@ const DailyQuests = () => {
             </div>
 
             <div className="flex justify-center gap-2 mb-4">
-                {Array.from({ length: Math.ceil(dailyQuests.length / 2) }).map((_, index) => (
+                {Array.from({length: Math.ceil(dailyQuests.length / 2)}).map((_, index) => (
                     <div
                         key={index}
                         className="relative transition-all duration-300 cursor-pointer"
@@ -530,7 +558,15 @@ const DailyQuests = () => {
 }
 
 const QuickActionCards = () => {
-    const quickActions = [
+    interface QuickActionType {
+        id: number
+        title: string
+        icon: React.ComponentType<{ className?: string }>
+        bgColor: string
+        action: () => void
+    }
+
+    const quickActions: QuickActionType[] = [
         {
             id: 1,
             title: "Interview History",
@@ -563,7 +599,8 @@ const QuickActionCards = () => {
 
     return (
         <div className="space-y-4 mb-6">
-            <h3 className="text-lg font-bold text-[#111111] font-[family-name:var(--font-unbounded)] px-2">Quick Actions</h3>
+            <h3 className="text-lg font-bold text-[#111111] font-[family-name:var(--font-unbounded)] px-2">Quick
+                Actions</h3>
 
             <div className="grid grid-cols-2 gap-4">
                 {quickActions.map((action) => {
@@ -577,9 +614,9 @@ const QuickActionCards = () => {
                             <div className="flex flex-col items-center text-center gap-3">
                                 <div
                                     className="w-12 h-12 rounded-xl flex items-center justify-center shadow-md"
-                                    style={{ backgroundColor: action.bgColor }}
+                                    style={{backgroundColor: action.bgColor}}
                                 >
-                                    <IconComponent className="w-6 h-6 text-white" />
+                                    <IconComponent className="w-6 h-6 text-white"/>
                                 </div>
 
                                 <div>
@@ -597,10 +634,9 @@ const QuickActionCards = () => {
 }
 
 export default function GameDashboard() {
-    const router = useRouter()
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
-    const { user } = useAuthStore()
+    const {user} = useAuthStore()
 
     useEffect(() => {
         if (!api) {
@@ -615,17 +651,18 @@ export default function GameDashboard() {
     }, [api])
 
     return (
-        <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: "#F8F7F4" }}>
+        <div className="min-h-screen relative overflow-hidden" style={{backgroundColor: "#F8F7F4"}}>
             <div className="absolute inset-0 opacity-40">
                 <svg width="100%" height="100%" viewBox="0 0 400 400" className="absolute inset-0">
                     <defs>
-                        <pattern id="celebrationWaves" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                            <path d="M0,100 Q50,50 100,100 T200,100 L200,200 L0,200 Z" fill="#F0EFEA" opacity="0.8" />
-                            <circle cx="50" cy="75" r="3" fill="#F7B844" opacity="0.6" />
-                            <circle cx="150" cy="125" r="2" fill="#F95C8A" opacity="0.5" />
+                        <pattern id="celebrationWaves" x="0" y="0" width="200" height="200"
+                                 patternUnits="userSpaceOnUse">
+                            <path d="M0,100 Q50,50 100,100 T200,100 L200,200 L0,200 Z" fill="#F0EFEA" opacity="0.8"/>
+                            <circle cx="50" cy="75" r="3" fill="#F7B844" opacity="0.6"/>
+                            <circle cx="150" cy="125" r="2" fill="#F95C8A" opacity="0.5"/>
                         </pattern>
                     </defs>
-                    <rect width="100%" height="100%" fill="url(#celebrationWaves)" />
+                    <rect width="100%" height="100%" fill="url(#celebrationWaves)"/>
                 </svg>
             </div>
 
@@ -634,7 +671,7 @@ export default function GameDashboard() {
                     title={
                         <div>
                             Hey {user?.full_name?.split(" ")[0] || "there"}!
-                            <br />
+                            <br/>
                             Pick a Game
                         </div>
                     }
@@ -653,7 +690,7 @@ export default function GameDashboard() {
                         <CarouselContent className="-ml-2 md:-ml-4 gap-4">
                             {gameCards.map((game, index) => (
                                 <CarouselItem key={game.id} className="pl-2 md:pl-4 basis-4/5">
-                                    <GameCard game={game} isActive={current === index} />
+                                    <GameCard game={game} isActive={current === index}/>
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
@@ -677,13 +714,13 @@ export default function GameDashboard() {
                     ))}
                 </div>
 
-                <DailyQuests />
+                <DailyQuests/>
 
-                <PomodoroTimer />
+                <PomodoroTimer/>
 
-                <QuickActionCards />
+                <QuickActionCards/>
 
-                <BottomNavigation />
+                <BottomNavigation/>
             </div>
         </div>
     )

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Header from "@/components/Header"
 
 export default function ResultsPage() {
     const [showContent, setShowContent] = useState(false)
@@ -100,7 +99,7 @@ export default function ResultsPage() {
 
                 <div className="text-center mb-10 px-4">
                     <h1 className="text-4xl font-extrabold text-[#212121] mb-4 leading-tight font-[family-name:var(--font-unbounded)]">
-                        You're a {characterName}! {characterEmoji}
+                        {"You're a"} {characterName}! {characterEmoji}
                     </h1>
                     <p className="text-lg text-[#212121]/70 mb-6 max-w-sm mx-auto">Here are your key traits:</p>
                     <div className="flex flex-wrap justify-center gap-3">

@@ -54,7 +54,7 @@ export default function MenuPage() {
 
                 <div className="rounded-3xl p-6 mt-6" style={{ backgroundColor: "#FFDCEF" }}>
                     <div className="space-y-3">
-                        {menuItems.map((item, index) => {
+                        {menuItems.map((item) => {
                             const Icon = item.icon
                             return (
                                 <div
