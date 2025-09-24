@@ -13,7 +13,7 @@ const caseStudy = {
         setup:
             "Bean There was thriving in its first year, averaging 200 customers daily. But over the past 6 months, foot traffic has dropped to just 80 customers per day. Revenue is down 60%, and Sarah is struggling to understand why.",
         evidence:
-            "Recent observations: 1) New Starbucks opened 2 blocks away, 2) Several regular customers haven't been seen in months, 3) Online reviews mention 'slow service' and 'limited seating', 4) Morning rush seems particularly affected, 5) Afternoon sales remain relatively stable.",
+            "Recent observations: 1) New Starbucks opened 2 blocks away, 2) Several regular customers haven't been seen in months, 3) Online reviews mention 'slow services' and 'limited seating', 4) Morning rush seems particularly affected, 5) Afternoon sales remain relatively stable.",
         witness_statements:
             "Regular customer Mike: 'I used to come every morning, but the wait got too long.' Barista Jenny: 'We're understaffed during peak hours.' Neighbor business owner: 'That new Starbucks has a drive-thru, very convenient for commuters.'",
         debriefing:
@@ -36,7 +36,7 @@ const caseStudy = {
         },
         {
             question: "What competitive advantage does the new Starbucks have that Bean There lacks?",
-            options: ["Better coffee", "Lower prices", "Drive-thru service", "Larger space"],
+            options: ["Better coffee", "Lower prices", "Drive-thru services", "Larger space"],
             correct: 2,
             rationale:
                 "The neighbor specifically mentioned 'That new Starbucks has a drive-thru, very convenient for commuters.'",
@@ -57,10 +57,10 @@ const caseStudy = {
         },
         {
             question: "Based on the evidence, what type of solution would most likely help Bean There?",
-            options: ["Lower prices", "Faster service", "New menu items", "Bigger space"],
+            options: ["Lower prices", "Faster services", "New menu items", "Bigger space"],
             correct: 1,
             rationale:
-                "Since the main issues are long wait times and understaffing during rush hours, improving service speed would address the core problem.",
+                "Since the main issues are long wait times and understaffing during rush hours, improving services speed would address the core problem.",
         },
         {
             question: "What remains stable in Bean There's business?",
@@ -81,14 +81,14 @@ const caseStudy = {
             options: ["Online surveys", "Customer interviews", "Competitor analysis", "Financial analysis"],
             correct: 1,
             rationale:
-                "Since the problem involves customer behavior changes and service experience, direct customer interviews would provide the most valuable insights.",
+                "Since the problem involves customer behavior changes and services experience, direct customer interviews would provide the most valuable insights.",
         },
         {
             question: "What should be the primary focus of customer interviews for this case?",
             options: ["Product preferences", "Pricing sensitivity", "Service experience", "Brand perception"],
             correct: 2,
             rationale:
-                "Given that the main issues are wait times and service speed, focusing on service experience would yield the most actionable insights.",
+                "Given that the main issues are wait times and services speed, focusing on services experience would yield the most actionable insights.",
         },
     ],
 }
