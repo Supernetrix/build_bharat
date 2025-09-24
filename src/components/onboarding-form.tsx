@@ -41,7 +41,7 @@ export function OnboardingForm() {
     const [currentStep, setCurrentStep] = useState(1)
     const [answers, setAnswers] = useState<Record<number, string>>({})
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [selectedArchetype, setSelectedArchetype] = useState<string>("")
+    const [selectedArchetype, setSelectedArchetype] = useState<string>("I will give you a business idea. From the following five archetypes — Hero, Mentor, Shadow, Trickster, Innocent —  Hero, Mentor, Shadow, Trickster, Innocent — choose one based on the business idea.")
     const router = useRouter()
     const { user, token } = useAuthStore()
 
@@ -82,7 +82,7 @@ export function OnboardingForm() {
             localStorage.removeItem("selectedArchetype")
 
             console.log("Onboarding completed successfully")
-            router.push("/dashboard")
+            router.push("/character")
         } catch (error) {
             console.error("Failed to complete onboarding:", error)
             // Handle error - maybe show a toast or error message

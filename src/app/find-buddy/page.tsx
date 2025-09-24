@@ -109,8 +109,6 @@ export default function FindBuddyPage() {
 
     return (
         <div className="min-h-screen bg-[#F8F7F4] relative overflow-hidden font-[family-name:var(--font-space-grotesk)]">
-            <Header />
-
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-20 left-10 w-16 h-16 bg-[#F7B844]/20 rounded-full"></div>
                 <div className="absolute top-40 right-8 w-12 h-12 bg-[#F95C8A]/20 rounded-full"></div>

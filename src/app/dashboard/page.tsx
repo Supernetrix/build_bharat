@@ -12,18 +12,21 @@ import {
     Zap,
     Trophy,
     Star,
+    Loader2,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel"
 import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
+import { useAuthStore } from "@/store/authStore"
+
+const BASE_URL = "https://backend-ifcu.onrender.com/api"
 
 const gameCards = [
     {
         id: 1,
-        title: "Tebak Gambar",
-        online: "8,472",
+        title: "THE CREATOR",
         bgTop: "#F7B844",
         bgBottom: "#F95C8A",
         character: "pink",
@@ -37,13 +40,12 @@ const gameCards = [
     },
     {
         id: 2,
-        title: "Word Quest",
-        online: "5,231",
+        title: "THE CONNECTOR",
         bgTop: "#4ECDC4",
         bgBottom: "#44A08D",
         character: "blue",
         level: 2,
-        isUnlocked: true,
+        isUnlocked: false,
         isCompleted: false,
         progress: 65,
         stars: 2,
@@ -52,8 +54,7 @@ const gameCards = [
     },
     {
         id: 3,
-        title: "Math Hero",
-        online: "3,847",
+        title: "THE MARKETER",
         bgTop: "#A8E6CF",
         bgBottom: "#7FCDCD",
         character: "green",
@@ -68,7 +69,6 @@ const gameCards = [
     {
         id: 4,
         title: "Color Match",
-        online: "6,592",
         bgTop: "#FFB6C1",
         bgBottom: "#FFA07A",
         character: "coral",
@@ -82,8 +82,7 @@ const gameCards = [
     },
     {
         id: 5,
-        title: "Brain Teaser",
-        online: "4,156",
+        title: "THE LAUNCHER",
         bgTop: "#DDA0DD",
         bgBottom: "#9370DB",
         character: "purple",
@@ -97,8 +96,7 @@ const gameCards = [
     },
     {
         id: 6,
-        title: "Speed Quiz",
-        online: "7,823",
+        title: "THE ANALYST",
         bgTop: "#F0E68C",
         bgBottom: "#DAA520",
         character: "yellow",
@@ -113,7 +111,6 @@ const gameCards = [
     {
         id: 7,
         title: "Memory Game",
-        online: "2,945",
         bgTop: "#87CEEB",
         bgBottom: "#4682B4",
         character: "sky",
@@ -145,12 +142,40 @@ const difficultyColors = {
 }
 
 const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
-    const handlePlayClick = () => {
+    const [isGeneratingCaseStudy, setIsGeneratingCaseStudy] = useState(false)
+    const { token, setCaseStudy } = useAuthStore()
+    const router = useRouter()
+
+    const handlePlayClick = async () => {
         if (game.id === 1 && game.isCompleted) {
-            // Navigate to Customer Detective level for level 1 play again
-            window.location.href = "/level/customer-detective"
+            try {
+                setIsGeneratingCaseStudy(true)
+
+                const response = await fetch(`${BASE_URL}/game/day/1/generate-case-study`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+
+                const data = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Failed to generate case study")
+                }
+
+                console.log("Day 1 case study and quiz generated. User state should be at 'day1:case-study-generated'.")
+
+                setCaseStudy(data)
+                router.push("/level/customer-detective")
+            } catch (error) {
+                console.error("Error generating case study:", error)
+                router.push("/level/customer-detective")
+            } finally {
+                setIsGeneratingCaseStudy(false)
+            }
         }
-        // Add other level navigation logic here for other games
     }
 
     return (
@@ -223,12 +248,21 @@ const GameCard = ({ game, isActive }: { game: any; isActive: boolean }) => {
                             backgroundColor: game.isUnlocked ? "#212121" : "#666666",
                             transform: isActive ? "translateY(-2px)" : "translateY(0px)",
                         }}
-                        disabled={!game.isUnlocked}
+                        disabled={!game.isUnlocked || isGeneratingCaseStudy}
                     >
                         {game.isUnlocked ? (
                             <>
-                                <Play className="w-5 h-5 fill-current" />
-                                <span>{game.isCompleted ? "Play Again" : "Continue"}</span>
+                                {isGeneratingCaseStudy ? (
+                                    <>
+                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                        <span>Loading...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Play className="w-5 h-5 fill-current" />
+                                        <span>{game.isCompleted ? "Continue" : "Play"}</span>
+                                    </>
+                                )}
                             </>
                         ) : (
                             <>
@@ -256,7 +290,6 @@ const PomodoroTimer = () => {
             }, 1000)
         } else if (timeLeft === 0) {
             setIsActive(false)
-            // Auto switch between work and break
             if (!isBreak) {
                 setTimeLeft(5 * 60) // 5 minute break
                 setIsBreak(true)
@@ -449,7 +482,6 @@ const DailyQuests = () => {
                                             </div>
 
                                             <div className="space-y-2">
-                                                {/* Progress bar */}
                                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                                     <div
                                                         className="h-2 rounded-full transition-all duration-300"
@@ -568,6 +600,7 @@ export default function GameDashboard() {
     const router = useRouter()
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
+    const { user } = useAuthStore()
 
     useEffect(() => {
         if (!api) {
@@ -583,7 +616,6 @@ export default function GameDashboard() {
 
     return (
         <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: "#F8F7F4" }}>
-            {/* Background Pattern */}
             <div className="absolute inset-0 opacity-40">
                 <svg width="100%" height="100%" viewBox="0 0 400 400" className="absolute inset-0">
                     <defs>
@@ -601,9 +633,9 @@ export default function GameDashboard() {
                 <Header
                     title={
                         <div>
-                            Pick game
+                            Hey {user?.full_name?.split(" ")[0] || "there"}!
                             <br />
-                            To Play
+                            Pick a Game
                         </div>
                     }
                     showExpProgress={true}
@@ -647,10 +679,8 @@ export default function GameDashboard() {
 
                 <DailyQuests />
 
-                {/* Pomodoro Timer below Daily Quest */}
                 <PomodoroTimer />
 
-                {/* Quick Action Cards */}
                 <QuickActionCards />
 
                 <BottomNavigation />

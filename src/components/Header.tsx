@@ -1,6 +1,7 @@
 "use client"
 
 import Avatar from "react-nice-avatar"
+import {useAuthStore} from "@/store/authStore"
 
 interface HeaderProps {
     showExpProgress?: boolean
@@ -8,11 +9,14 @@ interface HeaderProps {
     subtitle?: string
 }
 
-export default function Header({ showExpProgress = false, title, subtitle }: HeaderProps) {
-    const currentExp = 32503
-    const currentLevel = 15
-    const expForCurrentLevel = 30000
-    const expForNextLevel = 35000
+export default function Header({showExpProgress = false, title, subtitle}: HeaderProps) {
+    const {user} = useAuthStore()
+
+    // Use real user data or fallback to defaults
+    const currentExp = user?.xp || 0
+    const currentLevel = Math.floor(currentExp / 1000) + 1 // Simple level calculation
+    const expForCurrentLevel = (currentLevel - 1) * 1000
+    const expForNextLevel = currentLevel * 1000
     const progressInLevel = currentExp - expForCurrentLevel
     const expNeededForLevel = expForNextLevel - expForCurrentLevel
     const progressPercentage = (progressInLevel / expNeededForLevel) * 100
@@ -22,7 +26,7 @@ export default function Header({ showExpProgress = false, title, subtitle }: Hea
             <div className="flex items-center justify-between">
                 <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-3 shadow-sm flex items-center gap-3">
                     <Avatar
-                        style={{ width: "20px", height: "20px" }}
+                        style={{width: "20px", height: "20px"}}
                         sex="man"
                         faceColor="#F9C9B6"
                         earSize="small"
@@ -38,16 +42,20 @@ export default function Header({ showExpProgress = false, title, subtitle }: Hea
                         shirtColor="#9287FF"
                         bgColor="transparent"
                     />
-                    <span className="font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)] whitespace-nowrap">
-            Peter Haltermy
+                    <span
+                        className="font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)] whitespace-nowrap">
+            {user?.full_name || "Guest User"}
           </span>
                 </div>
 
                 <div className="bg-white/80 backdrop-blur-sm rounded-full px-3 py-2 flex items-center gap-2 shadow-sm">
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F7B844" }}>
-                        <div className="w-3 h-3 bg-yellow-300 rounded-full" />
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center"
+                         style={{backgroundColor: "#F7B844"}}>
+                        <div className="w-3 h-3 bg-yellow-300 rounded-full"/>
                     </div>
-                    <span className="font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)]">32,503</span>
+                    <span className="font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)]">
+            {currentExp.toLocaleString()}
+          </span>
                 </div>
             </div>
 
@@ -57,7 +65,7 @@ export default function Header({ showExpProgress = false, title, subtitle }: Hea
                         <div>
                             <h1
                                 className="text-2xl font-bold text-[#111111] leading-tight font-[family-name:var(--font-unbounded)]"
-                                style={{ lineHeight: "1.1" }}
+                                style={{lineHeight: "1.1"}}
                             >
                                 {title}
                             </h1>
@@ -74,7 +82,8 @@ export default function Header({ showExpProgress = false, title, subtitle }: Hea
                   <span className="text-xs font-bold text-gray-500 font-[family-name:var(--font-space-grotesk)]">
                     LVL {currentLevel}
                   </span>
-                                    <span className="text-xs font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)]">
+                                    <span
+                                        className="text-xs font-semibold text-[#111111] font-[family-name:var(--font-space-grotesk)]">
                     {progressInLevel}/{expNeededForLevel}
                   </span>
                                 </div>

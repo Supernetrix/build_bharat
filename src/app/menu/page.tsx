@@ -2,6 +2,8 @@
 
 import Header from "@/components/Header"
 import BottomNavigation from "@/components/BottomNavigation"
+import { useAuthStore } from "@/store/authStore"
+import { useRouter } from "next/navigation"
 import {
     Newspaper,
     ShieldCheck,
@@ -11,10 +13,19 @@ import {
     Users,
     Award,
     MessageSquare,
+    LogOut,
     ChevronRight,
 } from "lucide-react"
 
 export default function MenuPage() {
+    const { logout } = useAuthStore()
+    const router = useRouter()
+
+    const handleLogout = () => {
+        logout()
+        router.push("/")
+    }
+
     const menuItems = [
         { icon: Newspaper, label: "News", path: "/news" },
         { icon: ShieldCheck, label: "Double Protection", path: "/protection" },
@@ -24,6 +35,7 @@ export default function MenuPage() {
         { icon: Users, label: "Peer Support", path: "/community" },
         { icon: Library, label: "Library", path: "/library" },
         { icon: MessageSquare, label: "Chat", path: "/chat" },
+        { icon: LogOut, label: "Logout", path: "/logout", isLogout: true },
     ]
 
     return (
@@ -48,7 +60,13 @@ export default function MenuPage() {
                                 <div
                                     key={item.path}
                                     className="bg-white rounded-xl p-4 flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                                    onClick={() => console.log(`Navigate to ${item.path}`)}
+                                    onClick={() => {
+                                        if (item.isLogout) {
+                                            handleLogout()
+                                        } else {
+                                            console.log(`Navigate to ${item.path}`)
+                                        }
+                                    }}
                                 >
                                     <Icon className="w-5 h-5" style={{ color: "#888888" }} />
                                     <span className="flex-1 font-medium text-[#111111] font-[family-name:var(--font-space-grotesk)]">

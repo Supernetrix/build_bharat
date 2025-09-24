@@ -50,7 +50,7 @@ export function CharacterSelectionQuiz() {
     const handleSubmit = () => {
         if (selectedCharacter) {
             localStorage.setItem("selectedArchetype", selectedCharacter)
-            router.push("/onboarding")
+            router.push("/quiz")
         }
     }
 
